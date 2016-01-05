@@ -13,8 +13,10 @@ project/boot/
 project/plugins/project/
 
 # Scala-IDE specific
+.idea
 .scala_dependencies
 submission/target
 recitations/target
 project/target
 project/project/target
+
