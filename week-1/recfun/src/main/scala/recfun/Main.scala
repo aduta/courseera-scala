@@ -43,11 +43,24 @@ object Main {
 
       matches(chars, 0)
     }
-  
+
   /**
    * Exercise 3
    */
     def countChange(money: Int, coins: List[Int]): Int = {
+
+      def countForHead(money: Int, coins: List[Int]) = {
+
+        if (money == 0) 1
+        else {
+          var acc = 0
+          for (i <- 1 to (money / coins.head)) {
+            acc = acc + countChange(money - i * coins.head, coins.tail)
+          }
+
+          acc
+        }
+      }
 
       if (money == 0) {
         println ("money is zero")
@@ -59,8 +72,12 @@ object Main {
       }
       else {
         println (s"Recursing over $money and $coins")
-        countChange(money % coins.head, coins.tail) + countChange(money, coins.tail)
+        val q = money / coins.head
+        val mod = money % coins.head
+
+        countForHead(money, coins) + countChange(money, coins.tail)
       }
+
 
     }
   }
