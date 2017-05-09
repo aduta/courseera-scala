@@ -49,25 +49,18 @@ object Main {
    */
     def countChange(money: Int, coins: List[Int]): Int = {
 
-      // pick the head
-      // find modulo if mod 0 - increment count and decrement q
-      // loop with mod as money and tail as list
-
-      var count = 0
-      def div(num: Int, divisor: Int) = (num / divisor, num % divisor)
-
-      val (q, mod) = div(money, coins.head)
-      if (q == 0) {
-        count = count + countChange(mod, coins.tail)
-      } else {
-        if (mod == 0) {
-
-        }
-        count = count + 1 + countChange(mod, coins.tail)
-
+      if (money == 0) {
+        println ("money is zero")
+        1
+      }
+      else if (coins.isEmpty || money < 0) {
+        println(s"coins list is ${coins} and money is $money")
+        0
+      }
+      else {
+        println (s"Recursing over $money and $coins")
+        countChange(money % coins.head, coins.tail) + countChange(money, coins.tail)
       }
 
-
-      count
     }
   }
