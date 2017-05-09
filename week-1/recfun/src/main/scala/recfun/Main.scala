@@ -22,7 +22,27 @@ object Main {
   /**
    * Exercise 2
    */
-    def balance(chars: List[Char]): Boolean = ???
+    def balance(chars: List[Char]): Boolean = {
+
+      def next(chars: List[Char], open: Int): (List[Char], Int) = {
+        if (chars.isEmpty) (chars, open)
+        else if (chars.head == '(') (chars.tail, open + 1)
+        else if (chars.head == ')') (chars.tail, open - 1)
+        else next(chars.tail, open)
+      }
+
+      def matches(chars: List[Char], open: Int): Boolean = {
+
+        if (chars.isEmpty) open == 0
+        else if (open < 0) false
+        else {
+          val t = next(chars, open)
+          matches(t._1, t._2)
+        }
+      }
+
+      matches(chars, 0)
+    }
   
   /**
    * Exercise 3
