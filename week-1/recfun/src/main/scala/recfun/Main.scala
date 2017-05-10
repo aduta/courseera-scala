@@ -62,22 +62,9 @@ object Main {
         }
       }
 
-      if (money == 0) {
-        println ("money is zero")
-        1
-      }
-      else if (coins.isEmpty || money < 0) {
-        println(s"coins list is ${coins} and money is $money")
-        0
-      }
-      else {
-        println (s"Recursing over $money and $coins")
-        val q = money / coins.head
-        val mod = money % coins.head
-
-        countForHead(money, coins) + countChange(money, coins.tail)
-      }
-
+      if (money == 0) 1
+      else if (coins.isEmpty || money < 0) 0
+      else countForHead(money, coins) + countChange(money, coins.tail)
 
     }
   }
