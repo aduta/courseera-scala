@@ -142,13 +142,46 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  test("test filter") {
+  test("test forall") {
     new TestSets {
       val u123 = union(s1, union(s2, s3))
-      val fs1 = filter(u123, (_ > 1))
+
+      val fs1 = forall(u123, (_ > 1))
+
       assert(!contains(fs1, 1))
       assert(contains(fs1, 2))
       assert(contains(fs1, 3))
+
+    }
+
+  }
+
+  test("test filter") {
+    new TestSets {
+      val u123 = union(s1, union(s2, s3))
+
+      val fs1 = filter(u123, (_ > 1))
+
+      assert(!contains(fs1, 1))
+      assert(contains(fs1, 2))
+      assert(contains(fs1, 3))
+
+    }
+
+  }
+
+  test("test map") {
+    new TestSets {
+      val u123 = union(s1, union(s2, s3))
+
+      val mp = map(u123, (_ + 3))
+
+      assert(!contains(mp, 1))
+      assert(!contains(mp, 2))
+      assert(!contains(mp, 3))
+      assert(contains(mp, 4))
+      assert(contains(mp, 5))
+      assert(contains(mp, 6))
 
     }
 
