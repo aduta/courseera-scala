@@ -145,13 +145,23 @@ class FunSetSuite extends FunSuite {
   test("test forall") {
     new TestSets {
       val u123 = union(s1, union(s2, s3))
+      assert(forall(u123, (_ < 4)))
 
-      val fs1 = forall(u123, (_ > 1))
+      val evens = union(singletonSet(2), union(singletonSet(4), singletonSet(6)))
+      assert(forall(evens, (_ % 2 == 0)))
+      assert(!forall(evens,  _ == 5))
+    }
 
-      assert(!contains(fs1, 1))
-      assert(contains(fs1, 2))
-      assert(contains(fs1, 3))
+  }
 
+  test("test exists") {
+    new TestSets {
+      val oddEven = union(singletonSet(1), union(singletonSet(3), singletonSet(10)))
+      assert(exists(oddEven, (_ % 2 == 0)))
+
+      val evens = union(singletonSet(2), union(singletonSet(4), singletonSet(6)))
+      assert(exists(evens, (_ < 3)))
+      assert(!exists(evens, (_ > 6)))
     }
 
   }
