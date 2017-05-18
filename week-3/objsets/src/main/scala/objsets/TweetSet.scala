@@ -133,9 +133,7 @@ class Empty extends TweetSet {
   def mostRetweeted: Tweet = throw new NoSuchElementException
   def mostRetweetedAcc(current: Tweet): Tweet = current
 
-  def descendingByRetweet: TweetList = {
-    Nil
-  }
+  def descendingByRetweet: TweetList = Nil
 
 }
 
