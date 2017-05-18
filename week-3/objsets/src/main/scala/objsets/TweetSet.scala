@@ -1,5 +1,7 @@
 package objsets
 
+import java.util.NoSuchElementException
+
 import TweetReader._
 
 import scala.collection.immutable.Stream.Empty
@@ -36,6 +38,7 @@ class Tweet(val user: String, val text: String, val retweets: Int) {
  */
 abstract class TweetSet {
 
+
   /**
    * This method takes a predicate and returns a subset of all the elements
    * in the original set for which the predicate is true.
@@ -67,8 +70,10 @@ abstract class TweetSet {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-    def mostRetweeted: Tweet = ???
-  
+    def mostRetweeted: Tweet
+
+    def mostRetweetedAcc(current: Tweet): Tweet
+
   /**
    * Returns a list containing all tweets of this set, sorted by retweet count
    * in descending order. In other words, the head of the resulting list should
@@ -78,7 +83,7 @@ abstract class TweetSet {
    * Question: Should we implment this method here, or should it remain abstract
    * and be implemented in the subclasses?
    */
-    def descendingByRetweet: TweetList = ???
+    def descendingByRetweet: TweetList
   
   /**
    * The following methods are already implemented
@@ -124,6 +129,14 @@ class Empty extends TweetSet {
   def foreach(f: Tweet => Unit): Unit = ()
 
   override def union(that: TweetSet): TweetSet = that
+
+  def mostRetweeted: Tweet = throw new NoSuchElementException
+  def mostRetweetedAcc(current: Tweet): Tweet = current
+
+  def descendingByRetweet: TweetList = {
+    Nil
+  }
+
 }
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
@@ -166,6 +179,20 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     u2 incl elem
   }
 
+  def mostRetweetedAcc(current: Tweet): Tweet = {
+    val cm = if (current.retweets < elem.retweets) elem else current
+    right.mostRetweetedAcc(left.mostRetweetedAcc(cm))
+  }
+
+  def mostRetweeted: Tweet = {
+    mostRetweetedAcc(elem)
+  }
+
+  def descendingByRetweet: TweetList = {
+    val max = mostRetweeted
+    val remain = remove(max)
+    new Cons(max, remain.descendingByRetweet)
+  }
 }
 
 trait TweetList {
@@ -194,14 +221,14 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-    lazy val googleTweets: TweetSet = ???
-  lazy val appleTweets: TweetSet = ???
+  lazy val googleTweets: TweetSet = TweetReader.allTweets.filter(t => google.exists(t.text.contains(_)))
+  lazy val appleTweets: TweetSet = TweetReader.allTweets.filter(t => apple.exists(t.text.contains(_)))
   
   /**
    * A list of all tweets mentioning a keyword from either apple or google,
    * sorted by the number of retweets.
    */
-     lazy val trending: TweetList = ???
+     lazy val trending: TweetList = (googleTweets union appleTweets) descendingByRetweet
   }
 
 object Main extends App {
